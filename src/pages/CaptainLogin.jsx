@@ -1,17 +1,37 @@
+import Axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext";
+import { getAPI } from '../Constant';
 
 const CaptainLogin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(email, password);
+  const { captain, setCaptain } = React.useContext(CaptainDataContext);
+  
 
+  const submitHandler = async (e) => {
+    e.preventDefault();
+   
+    const captainData = {
+      email: email,
+      password: password,
+    }
+
+    const response = await Axios.post(`${getAPI}captains/login`, captainData);
+    if (response.status === 200) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem("token", data.token);
+      navigate("/captain-home");
+    }
     setEmail("");
     setPassword("");
   };
+  console.log("captain", captain);
+  
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
@@ -44,7 +64,7 @@ const CaptainLogin = () => {
           />
 
           <button className="bg-[#111] text-[#fff] font-semibold w-full mb-3 rounded px-4 py-2 text-lg">
-            Login
+            Login As Captain
           </button>
         </form>
         <p className="text-center mb-3">

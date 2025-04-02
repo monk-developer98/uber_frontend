@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
+import Axios from "axios";
+import {UserDataContext} from "../context/UserContext";
 
 const UserSignup = () => {
   const [email, setEmail] = useState("");
@@ -7,15 +9,43 @@ const UserSignup = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate()
+
+  const { user, setUser } = React.useContext(UserDataContext);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(email, password);
+
+    const newUser = {
+      fullname: {
+        firstname: firstname,
+        lastname: lastname,
+      },
+      email: email,
+      password: password,
+    } 
+
+    const response = await Axios.post(`http://localhost:8000/users/register`, newUser);
+    if(response.status === 200) {
+      const data  = response.data
+
+      setUser(data.user)
+      localStorage.setItem('token', (data.token))
+      navigate('/home')
+      console.log('data' , data);
+      
+    }else{
+      console.log('error' , response.data.message);  
+    }
+
 
     setFirstname("");
     setLastname("");
     setEmail("");
     setPassword("");
   };
+  console.log('user' , user);
+  
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>

@@ -1,18 +1,38 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState  } from "react";
+import { Link , useNavigate} from "react-router-dom";
+import {UserDataContext} from "../context/UserContext";
+import Axios from "axios";
+import { getAPI } from '../Constant';
+
 
 const UserLogin = () => {
+  const navigate = useNavigate()
   const [email , setEmail] = useState('')
   const [password , setPassword] = useState('')
+  const { user, setUser } = React.useContext(UserDataContext);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault()
-    console.log(email , password);
+     
+    const userData = {
+      email: email,
+      password: password
+    }
 
-    setEmail('')
-    setPassword('')
+    const response = await Axios.post(`${getAPI}users/login`, userData)
+
+    if(response.status === 200) {
+      const data  = response.data
+      setUser(data.user)
+      localStorage.setItem('token', (data.token))
+      navigate('/home')
+    }
+    
+    // setEmail('')
+    // setPassword('')
     
   }
+  console.log('user' , user);
 
   return (
     <div className="p-7 h-screen flex flex-col justify-between">

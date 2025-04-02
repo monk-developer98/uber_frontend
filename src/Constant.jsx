@@ -1,0 +1,1 @@
+export const getAPI = 'http://localhost:8000/'; // API URL for developmen
