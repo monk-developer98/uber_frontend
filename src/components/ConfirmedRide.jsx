@@ -3,7 +3,7 @@ import React from "react";
 const ConfirmedRide = (props) => {
   return (
     <div>
-      <h5  className="p-1 text-center w-[93%] absolute top-0">
+      <h5 onClick={()=>props.setconfirmedRidePanel(false)}  className="p-1 text-center w-[93%] absolute top-0">
         <i className="text-2xl text-gray-300 ri-arrow-down-wide-line"></i>
       </h5>
       <h3 className="text-2xl font-semibold mb-5">Confirmed your Ride</h3>
