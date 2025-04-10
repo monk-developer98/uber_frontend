@@ -1,11 +1,54 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import Captaindetails from "../components/Captaindetails";
+import RidePopup from "../components/RidePopup";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import "remixicon/fonts/remixicon.css";
+import ConfirmRidePopup from "../components/ConfirmRidePopup";
 
 const CaptainHome = () => {
+  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
+  const ridePopRef = useRef(null);
+  const confirmRidePopRef = useRef(null);
+
+  useGSAP(
+    function () {
+      if (ridePopupPanel) {
+        gsap.to(ridePopRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(ridePopRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [ridePopupPanel]
+  );
+  useGSAP(
+    function () {
+      if (confirmRidePopupPanel) {
+        gsap.to(confirmRidePopRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(confirmRidePopRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [confirmRidePopupPanel]
+  );
+
   return (
     <div className="h-screen ">
-      <div className="fixed w-full p-3 top-0 flex items-center justify-between" >
-        <img className="w-16" src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" />
+      <div className="fixed w-full p-3 top-0 flex items-center justify-between">
+        <img
+          className="w-16"
+          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+        />
         <Link
           to={"/captain-login"}
           className=" h-10 w-10  bg-white flex items-center justify-center rounded-full"
@@ -21,33 +64,13 @@ const CaptainHome = () => {
         />
       </div>
       <div className="h-2/5 p-6 ">
-        <div className="flex items-center  justify-between ">
-          <div className="flex items-center justify-start gap-3">
-            <img className="h-10 w-10 rounded-full object-cover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjDGMp734S91sDuUFqL51_xRTXS15iiRoHew&s" alt="" />
-            <h4 className="text-lg font-medium">Kapil Kumar</h4>
-          </div>
-          <div >
-            <h4 className="text-xl font-semibold">₹295.20</h4>
-            <p className="text-sm text-gray-600 text-center" >Earned</p>
-          </div>
-        </div>
-        <div className="flex mt-6 gap-5 p-3 bg-gray-100 rounded-xl justify-center items-start">
-          <div className="text-center">
-            <i className="text-3xl mb-2 font-thin ri-timer-2-line"></i>
-            <h5 className="text-lg font-medium">10.2</h5>
-            <p className="text-sm text-gray-600">Hours Online</p>
-          </div>
-          <div className="text-center">
-            <i className="text-3xl mb-2 font-thin ri-speed-up-line"></i>
-            <h5 className="text-lg font-medium">10.2</h5>
-            <p className="text-sm text-gray-600">Hours Online</p>
-          </div>
-          <div className="text-center">
-            <i className="text-3xl mb-2 font-thin ri-booklet-line"></i>
-            <h5 className="text-lg font-medium">10.2</h5>
-            <p className="text-sm text-gray-600">Hours Online</p>
-          </div>
-        </div>
+        <Captaindetails />
+      </div>
+      <div ref={ridePopRef} className="fixed bottom-0 w-full z-10 translate-y-full bg-white px-3 py-10 pt-12">
+        <RidePopup setRidePopupPanel={setRidePopupPanel}  setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
+      </div>
+      <div ref={confirmRidePopRef} className="fixed bottom-0 h-screen w-full z-10 translate-y-full bg-white px-3 py-10 pt-12">
+        <ConfirmRidePopup setConfirmRidePopupPanel={setConfirmRidePopupPanel}  setRidePopupPanel={setRidePopupPanel}/>
       </div>
     </div>
   );
